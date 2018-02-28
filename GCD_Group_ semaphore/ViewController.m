@@ -25,7 +25,7 @@
     [self groupSemaphoreMethod];
 }
 
-
+/// 多个异步任务执行完成后通知
 - (void)groupMethod
 {
     //创建一个组
@@ -52,7 +52,7 @@
         NSLog(@"group所有请求完毕!!!");
     });
 }
-
+/// 多个异步任务 同步执行
 - (void)semaphoreMethod
 {
     //创建一个信号量 数值为1
@@ -82,7 +82,7 @@
     }
     NSLog(@"semaphore开始 网络请求!");
 }
-
+/// 多个异步任务 同步执行 执行完成通知
 - (void)groupSemaphoreMethod
 {
     dispatch_group_t group = dispatch_group_create();
@@ -120,6 +120,24 @@
     
     NSLog(@"groupSemaphore开始 网络请求!");
     
+}
+
+- (void)serialMethod {
+    dispatch_queue_t queue = dispatch_queue_create("serial",DISPATCH_QUEUE_SERIAL);
+    ///在串行队列中 执行第一个异步任务
+    dispatch_async(queue, ^{
+        NSLog(@"1---%@", [NSThread currentThread]);
+        [NSThread sleepForTimeInterval:5];
+        NSLog(@"xxxxxxxxxxxxxx");
+    });
+    ///在串行队列中 执行第二个异步任务
+    dispatch_async(queue, ^{
+        NSLog(@"2---%@", [NSThread currentThread]);
+    });
+    ///在串行队列中 执行第三个异步任务
+    dispatch_async(queue, ^{
+        NSLog(@"3---%@", [NSThread currentThread]);
+    });
 }
 
 - (void)didReceiveMemoryWarning {
